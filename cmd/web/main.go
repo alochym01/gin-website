@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -27,6 +26,7 @@ var albums = []album{
 }
 
 func main() {
+	// Remove sqlite db file
 	os.Remove("foo.db")
 
 	// sqlite section
@@ -39,9 +39,9 @@ func main() {
 		"title" TEXT,
 		"artist" TEXT,
 		"price" TEXT
-	  );` // SQL Statement for Create Table
+	  );`
 
-	log.Println("Create student table...")
+	// SQL Statement for Create Table
 	statement, err := db.Prepare(Album) // Prepare SQL Statement
 	if err != nil {
 		log.Fatal(err.Error())
@@ -53,13 +53,8 @@ func main() {
 	stmt, _ := db.Prepare("INSERT INTO albums(title, artist, price) values(?,?,?)")
 
 	for _, v := range albums {
-		fmt.Println(v.ID)
-		fmt.Println(v.Artist)
-		fmt.Println(v.Title)
-		fmt.Println(v.Price)
-
-		// fmt.Println(stmt)
-		_, _ = stmt.Exec(v.Title, v.Artist, v.Price)
+		// fmt.Println(v.ID, v.Artist, v.Title, v.Price)
+		stmt.Exec(v.Title, v.Artist, v.Price) // Execute SQL Statements
 	}
 
 	router := gin.Default()
