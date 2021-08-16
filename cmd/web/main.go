@@ -22,13 +22,6 @@ type album struct {
 	Price  float64 `json:"price"`
 }
 
-// albums slice to seed record album data.
-var albums = []album{
-	{Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
-	{Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},
-	{Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
-}
-
 func main() {
 	// Remove sqlite db file
 	os.Remove("foo.db")
@@ -228,6 +221,13 @@ func prepareDB(db *sql.DB) {
 		fmt.Println(err.Error())
 	}
 	fmt.Println("Album table created")
+
+	// albums slice to seed record album data.
+	var albums = []album{
+		{Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
+		{Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},
+		{Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
+	}
 
 	for _, v := range albums {
 		sqlstmt := fmt.Sprintf("INSERT INTO albums(title, artist, price) VALUES(\"%s\", \"%s\", %f)",
