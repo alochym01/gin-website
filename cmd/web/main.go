@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-
 	"github.com/alochym01/gin-website/config"
 	"github.com/alochym01/gin-website/models"
 	"github.com/alochym01/gin-website/router"
@@ -12,8 +10,7 @@ import (
 )
 
 func main() {
-	// Remove sqlite db file
-	os.Remove("foo.db")
+	// sqlite
 	config.DB = config.SqliteConn("foo.db")
 	defer config.DB.Close()
 	config.DB.Ping()

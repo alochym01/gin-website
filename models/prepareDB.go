@@ -42,6 +42,8 @@ func PrepareMysqlDB(db *sql.DB) {
 
 // PreparesqliteDB create mock data.
 func PreparesqliteDB(db *sql.DB) {
+	sqldroptable := fmt.Sprint("DROP TABLE albums;")
+	db.Exec(sqldroptable)
 	// Create Album table
 	// SQL Statement for Create Table
 	sqltable := fmt.Sprint("CREATE TABLE albums (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,title TEXT,artist TEXT, price TEXT);")
