@@ -8,3 +8,4 @@
 7. GRANT ALL ON MYSQLTEST.* TO 'cmis'@'%';
 8. uncomment Mysql section in `cmd/web/main.go`
 9. <https://github.com/alochym01/golang-web>
+10. (Generate code follow Clean Architechture)<https://sf9v.github.io/posts/generating-the-repository-pattern-in-go/>
