@@ -1,4 +1,4 @@
-{"id": "4", "title": "Blue Train", "artist": "Do Nguyen Ha", "price": 5.99}
-{"id": "5", "title": "Alochym Coding", "artist": "Alochym", "price": 6.99}
-{"id": "6", "title": "Kubernetes with Rancher", "artist": "Alex Cuckooo", "price": 7.99}
-{"id": "7", "title": "Prometheus In Actions", "artist": "Ronaldo", "price": 8.99}
+{"id": 4, "title": "Blue Train", "artist": "Do Nguyen Ha", "price": 5.99}
+{"id": 5, "title": "Alochym Coding", "artist": "Alochym", "price": 6.99}
+{"id": 6, "title": "Kubernetes with Rancher", "artist": "Alex Cuckooo", "price": 7.99}
+{"id": 7, "title": "Prometheus In Actions", "artist": "Ronaldo", "price": 8.99}
