@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"fmt"
 
 	"github.com/alochym01/gin-website/config"
@@ -21,7 +22,7 @@ type RequestAlbum struct {
 	Price  float64 `json:"price"`
 }
 
-// Get Method get a record from DB
+// Get all record from DB
 func (al Album) Get() ([]Album, error) {
 	var (
 		// Create empty album
@@ -54,7 +55,7 @@ func (al Album) Get() ([]Album, error) {
 	return albums, nil
 }
 
-// GetByID Method get a record from DB
+// GetByID get a record of DB
 func (al Album) GetByID(id string) (Album, error) {
 	var record = Album{}
 
@@ -69,7 +70,7 @@ func (al Album) GetByID(id string) (Album, error) {
 	return record, err
 }
 
-// Create Method a record into DB
+// Create a record into DB
 func (al Album) Create(title string, artist string, price float64) error {
 
 	// sqlstmt - Avoid SQL Injection Attack
@@ -89,7 +90,7 @@ func (al Album) Create(title string, artist string, price float64) error {
 	return nil
 }
 
-// Update Method a record into DB
+// Update a record of DB
 func (al Album) Update(title string, artist string, price float64, id string) error {
 	// sqlstmt - Avoid SQL Injection Attack
 	sqlstmt := fmt.Sprintf("UPDATE albums SET title=\"%s\", artist=\"%s\", price=%f where id=%s",
@@ -106,5 +107,35 @@ func (al Album) Update(title string, artist string, price float64, id string) er
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+// Delete a record of DB
+func (al Album) Delete(id string) error {
+	// sqlstmt - Avoid SQL Injection Attack
+	sqlstmt := fmt.Sprintf("DELETE FROM albums where id=%s", id)
+
+	fmt.Println(sqlstmt)
+
+	// Execute SQL Statements
+	result, err := config.DB.Exec(sqlstmt)
+
+	// err check for DB operation
+	if err != nil {
+		return err
+	}
+
+	rowCount, err := result.RowsAffected()
+
+	// error check for RowsAffected function
+	if err != nil {
+		return err
+	}
+
+	// there is no row found
+	if rowCount == 0 {
+		return sql.ErrNoRows
+	}
+
 	return nil
 }

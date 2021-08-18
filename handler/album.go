@@ -5,16 +5,24 @@ import (
 	"net/http"
 
 	"github.com/alochym01/gin-website/models"
+	"github.com/alochym01/gin-website/repository"
 	"github.com/gin-gonic/gin"
 )
 
 // AlbumHandler is Album Handler
 type AlbumHandler struct {
-	// DB *sql.DB
+	repoAlbum repository.AlbumRepo
 }
 
-// Get responds with the list of all albums as JSON.
-func (e AlbumHandler) Get(c *gin.Context) {
+// NewAlbumHandler is return AlbumHandler
+func NewAlbumHandler() *AlbumHandler {
+	return &AlbumHandler{
+		repoAlbum: models.Album{},
+	}
+}
+
+// Index list of all albums as JSON in DB.
+func (e AlbumHandler) Index(c *gin.Context) {
 	var album models.Album
 
 	albums, err := album.Get()
@@ -25,8 +33,8 @@ func (e AlbumHandler) Get(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, albums)
 }
 
-// GetByID responds with the a record of albums as JSON.
-func (e AlbumHandler) GetByID(c *gin.Context) {
+// Show a record of albums as JSON in DB.
+func (e AlbumHandler) Show(c *gin.Context) {
 	var album models.Album
 	ID, _ := c.Params.Get("id")
 
@@ -49,8 +57,8 @@ func (e AlbumHandler) GetByID(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, record)
 }
 
-// Post adds an album from JSON received in the request body.
-func (e AlbumHandler) Post(c *gin.Context) {
+// Create an album from JSON received in the request body.
+func (e AlbumHandler) Create(c *gin.Context) {
 	var newAlbum models.RequestAlbum
 	var album models.Album
 
@@ -70,12 +78,12 @@ func (e AlbumHandler) Post(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, "OK")
 }
 
-// UpdateByID responds with the a record of albums as JSON.
+// Update a record of albums as JSON into DB.
 // Request body should contains:
 // title
 // artist
 // price
-func (e AlbumHandler) UpdateByID(c *gin.Context) {
+func (e AlbumHandler) Update(c *gin.Context) {
 	var updateRequest models.RequestAlbum
 	var album models.Album
 
@@ -115,4 +123,26 @@ func (e AlbumHandler) UpdateByID(c *gin.Context) {
 		return
 	}
 	c.IndentedJSON(http.StatusAccepted, "OK")
+}
+
+// Delete a record of albums in DB.
+func (e AlbumHandler) Delete(c *gin.Context) {
+	var album models.Album
+	ID, _ := c.Params.Get("id")
+
+	err := album.Delete(ID)
+
+	if err != nil {
+		// No record in database
+		if err == sql.ErrNoRows {
+			c.IndentedJSON(http.StatusNotFound, "Not found")
+			return
+		} else {
+			// check server err
+			c.IndentedJSON(http.StatusBadGateway, "Server Error")
+			return
+		}
+	}
+
+	c.IndentedJSON(http.StatusOK, "OK")
 }

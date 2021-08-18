@@ -11,8 +11,6 @@ func Router() *gin.Engine {
 
 	router := gin.Default()
 
-	albumH := &handler.AlbumHandler{}
-
 	// Using anonymous function
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -20,12 +18,14 @@ func Router() *gin.Engine {
 		})
 	})
 
-	// Using normal function
+	albumH := handler.NewAlbumHandler()
 	// Albums Handler
-	router.GET("/albums", albumH.Get)
-	router.GET("/albums/:id", albumH.GetByID)
-	router.POST("/albums", albumH.Post)
-	router.PUT("/albums/:id", albumH.UpdateByID)
+	// Using normal function
+	router.GET("/albums", albumH.Index)
+	router.GET("/albums/:id", albumH.Show)
+	router.POST("/albums", albumH.Create)
+	router.PUT("/albums/:id", albumH.Update)
+	router.DELETE("/albums/:id", albumH.Delete)
 
 	return router
 
