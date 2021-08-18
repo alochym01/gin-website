@@ -7,3 +7,4 @@
 6. CREATE USER 'cmis'@'%' IDENTIFIED BY 'Phuongtt@123cmis';
 7. GRANT ALL ON MYSQLTEST.* TO 'cmis'@'%';
 8. uncomment Mysql section in `cmd/web/main.go`
+9. <https://github.com/alochym01/golang-web>
