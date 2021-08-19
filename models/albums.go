@@ -25,9 +25,9 @@ type RequestAlbum struct {
 // Get all record from DB
 func (al Album) Get() ([]Album, error) {
 	var (
-		// Create empty album
+		// Create empty Album
 		record = Album{}
-		// Create empty slice album
+		// Create empty slice Album
 		albums = []Album{}
 	)
 
@@ -72,7 +72,6 @@ func (al Album) GetByID(id string) (Album, error) {
 
 // Create a record into DB
 func (al Album) Create(title string, artist string, price float64) error {
-
 	// sqlstmt - Avoid SQL Injection Attack
 	sqlstmt := fmt.Sprintf("INSERT INTO albums(title, artist, price) VALUES(\"%s\", \"%s\", %f)",
 		title,
@@ -82,12 +81,7 @@ func (al Album) Create(title string, artist string, price float64) error {
 
 	fmt.Println(sqlstmt)
 
-	// Execute SQL Statements
-	_, err := config.DB.Exec(sqlstmt)
-	if err != nil {
-		return err
-	}
-	return nil
+	return sqlHelper(config.DB, sqlstmt)
 }
 
 // Update a record of DB
@@ -102,12 +96,7 @@ func (al Album) Update(title string, artist string, price float64, id string) er
 
 	fmt.Println(sqlstmt)
 
-	// Execute SQL Statements
-	_, err := config.DB.Exec(sqlstmt)
-	if err != nil {
-		return err
-	}
-	return nil
+	return sqlHelper(config.DB, sqlstmt)
 }
 
 // Delete a record of DB
@@ -117,8 +106,13 @@ func (al Album) Delete(id string) error {
 
 	fmt.Println(sqlstmt)
 
+	return sqlHelper(config.DB, sqlstmt)
+}
+
+// sqlHelper return error
+func sqlHelper(db *sql.DB, sqlstmt string) error {
 	// Execute SQL Statements
-	result, err := config.DB.Exec(sqlstmt)
+	result, err := db.Exec(sqlstmt)
 
 	// err check for DB operation
 	if err != nil {

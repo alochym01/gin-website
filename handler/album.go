@@ -34,11 +34,11 @@ func (al AlbumHandler) Index(c *gin.Context) {
 
 // Show a record of albums as JSON in DB.
 func (al AlbumHandler) Show(c *gin.Context) {
-	ID, _ := c.Params.Get("id")
+	id := c.Param("id")
 
 	// Single-Row Queries
 	// Using album repository interface
-	record, err := al.albumRepo.GetByID(ID)
+	record, err := al.albumRepo.GetByID(id)
 
 	if err != nil {
 		// No record in database
