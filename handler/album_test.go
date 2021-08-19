@@ -103,5 +103,4 @@ func TestAlbumHandler(t *testing.T) {
 
 		assert.Equal(t, 201, w.Code)
 	})
-
 }
