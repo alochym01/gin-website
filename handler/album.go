@@ -11,20 +11,20 @@ import (
 
 // AlbumHandler is Album Handler
 type AlbumHandler struct {
-	repoAlbum repository.AlbumRepo
+	albumRepo repository.AlbumRepo
 }
 
 // NewAlbumHandler is return AlbumHandler
 func NewAlbumHandler() *AlbumHandler {
 	return &AlbumHandler{
-		repoAlbum: models.Album{},
+		albumRepo: models.Album{},
 	}
 }
 
 // Index list of all albums as JSON in DB.
-func (e AlbumHandler) Index(c *gin.Context) {
+func (al AlbumHandler) Index(c *gin.Context) {
 	// Using album repository interface
-	albums, err := e.repoAlbum.Get()
+	albums, err := al.albumRepo.Get()
 	if err != nil {
 		c.IndentedJSON(http.StatusBadGateway, "Server Error")
 		return
@@ -33,12 +33,12 @@ func (e AlbumHandler) Index(c *gin.Context) {
 }
 
 // Show a record of albums as JSON in DB.
-func (e AlbumHandler) Show(c *gin.Context) {
+func (al AlbumHandler) Show(c *gin.Context) {
 	ID, _ := c.Params.Get("id")
 
 	// Single-Row Queries
 	// Using album repository interface
-	record, err := e.repoAlbum.GetByID(ID)
+	record, err := al.albumRepo.GetByID(ID)
 
 	if err != nil {
 		// No record in database
@@ -56,7 +56,7 @@ func (e AlbumHandler) Show(c *gin.Context) {
 }
 
 // Create an album from JSON received in the request body.
-func (e AlbumHandler) Create(c *gin.Context) {
+func (al AlbumHandler) Create(c *gin.Context) {
 	var newAlbum models.RequestAlbum
 
 	// Call BindJSON to bind the received JSON to newAlbum.
@@ -68,11 +68,12 @@ func (e AlbumHandler) Create(c *gin.Context) {
 	}
 
 	// Using album repository interface
-	err := e.repoAlbum.Create(newAlbum.Title, newAlbum.Artist, newAlbum.Price)
+	err := al.albumRepo.Create(newAlbum.Title, newAlbum.Artist, newAlbum.Price)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, "Server error")
 		return
 	}
+
 	c.IndentedJSON(http.StatusCreated, "OK")
 }
 
@@ -81,7 +82,7 @@ func (e AlbumHandler) Create(c *gin.Context) {
 // title
 // artist
 // price
-func (e AlbumHandler) Update(c *gin.Context) {
+func (al AlbumHandler) Update(c *gin.Context) {
 	var updateRequest models.RequestAlbum
 
 	// Try to get ID from request
@@ -93,7 +94,7 @@ func (e AlbumHandler) Update(c *gin.Context) {
 
 	// Check record exist in DB
 	// Using album repository interface
-	_, err := e.repoAlbum.GetByID(ID)
+	_, err := al.albumRepo.GetByID(ID)
 
 	if err != nil {
 		// No record in database
@@ -115,21 +116,22 @@ func (e AlbumHandler) Update(c *gin.Context) {
 
 	// Update record exist in DB
 	// Using album repository interface
-	err = e.repoAlbum.Update(updateRequest.Title, updateRequest.Artist, updateRequest.Price, ID)
+	err = al.albumRepo.Update(updateRequest.Title, updateRequest.Artist, updateRequest.Price, ID)
 
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, "Server error")
 		return
 	}
+
 	c.IndentedJSON(http.StatusAccepted, "OK")
 }
 
 // Delete a record of albums in DB.
-func (e AlbumHandler) Delete(c *gin.Context) {
+func (al AlbumHandler) Delete(c *gin.Context) {
 	ID, _ := c.Params.Get("id")
 
 	// Using album repository interface
-	err := e.repoAlbum.Delete(ID)
+	err := al.albumRepo.Delete(ID)
 
 	if err != nil {
 		// No record in database
