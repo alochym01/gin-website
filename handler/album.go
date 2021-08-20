@@ -2,6 +2,7 @@ package handler
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"github.com/alochym01/gin-website/models"
@@ -35,6 +36,7 @@ func (al AlbumHandler) Index(c *gin.Context) {
 // Show a record of albums as JSON in DB.
 func (al AlbumHandler) Show(c *gin.Context) {
 	id := c.Param("id")
+	fmt.Println("alochym", c.Request.URL)
 
 	// Single-Row Queries
 	// Using album repository interface
@@ -45,11 +47,10 @@ func (al AlbumHandler) Show(c *gin.Context) {
 		if err == sql.ErrNoRows {
 			c.IndentedJSON(http.StatusNotFound, "Not found")
 			return
-		} else {
-			// check server err
-			c.IndentedJSON(http.StatusBadGateway, "Server Error")
-			return
 		}
+		// check server err
+		c.IndentedJSON(http.StatusBadGateway, "Server Error")
+		return
 	}
 
 	c.IndentedJSON(http.StatusOK, record)
@@ -101,11 +102,11 @@ func (al AlbumHandler) Update(c *gin.Context) {
 		if err == sql.ErrNoRows {
 			c.IndentedJSON(http.StatusBadRequest, "Try again")
 			return
-		} else {
-			// check server err
-			c.IndentedJSON(http.StatusBadGateway, "Server Error")
-			return
 		}
+		// check server err
+		c.IndentedJSON(http.StatusBadGateway, "Server Error")
+		return
+
 	}
 
 	// convert request body in json format to updateAlbum object
@@ -143,11 +144,10 @@ func (al AlbumHandler) Delete(c *gin.Context) {
 		if err == sql.ErrNoRows {
 			c.IndentedJSON(http.StatusNotFound, "Not found")
 			return
-		} else {
-			// check server err
-			c.IndentedJSON(http.StatusBadGateway, "Server Error")
-			return
 		}
+		// check server err
+		c.IndentedJSON(http.StatusBadGateway, "Server Error")
+		return
 	}
 
 	c.IndentedJSON(http.StatusOK, "OK")
