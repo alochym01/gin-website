@@ -20,9 +20,7 @@ import (
 func setupRouter() *gin.Engine {
 	router := gin.Default()
 	albumH := NewAlbumHandler()
-	router.GET("/ping", func(c *gin.Context) {
-		c.String(200, "pong")
-	})
+
 	router.GET("/albums", albumH.Index)
 	router.GET("/albums/:id", albumH.Show)
 	router.POST("/albums", albumH.Create)
