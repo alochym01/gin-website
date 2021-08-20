@@ -34,22 +34,21 @@ func (al AlbumHandler) Index(c *gin.Context) {
 
 // Show a record of albums as JSON in DB.
 func (al AlbumHandler) Show(c *gin.Context) {
-	ID, _ := c.Params.Get("id")
+	id := c.Param("id")
 
 	// Single-Row Queries
 	// Using album repository interface
-	record, err := al.albumRepo.GetByID(ID)
+	record, err := al.albumRepo.GetByID(id)
 
 	if err != nil {
 		// No record in database
 		if err == sql.ErrNoRows {
 			c.IndentedJSON(http.StatusNotFound, "Not found")
 			return
-		} else {
-			// check server err
-			c.IndentedJSON(http.StatusBadGateway, "Server Error")
-			return
 		}
+		// check server err
+		c.IndentedJSON(http.StatusBadGateway, "Server Error")
+		return
 	}
 
 	c.IndentedJSON(http.StatusOK, record)
@@ -86,7 +85,7 @@ func (al AlbumHandler) Update(c *gin.Context) {
 	var updateRequest models.RequestAlbum
 
 	// Try to get ID from request
-	ID, err1 := c.Params.Get("id")
+	id, err1 := c.Params.Get("id")
 	if err1 == false {
 		c.IndentedJSON(http.StatusBadRequest, "ID require")
 		return
@@ -94,18 +93,18 @@ func (al AlbumHandler) Update(c *gin.Context) {
 
 	// Check record exist in DB
 	// Using album repository interface
-	_, err := al.albumRepo.GetByID(ID)
+	_, err := al.albumRepo.GetByID(id)
 
 	if err != nil {
 		// No record in database
 		if err == sql.ErrNoRows {
 			c.IndentedJSON(http.StatusBadRequest, "Try again")
 			return
-		} else {
-			// check server err
-			c.IndentedJSON(http.StatusBadGateway, "Server Error")
-			return
 		}
+		// check server err
+		c.IndentedJSON(http.StatusBadGateway, "Server Error")
+		return
+
 	}
 
 	// convert request body in json format to updateAlbum object
@@ -116,7 +115,7 @@ func (al AlbumHandler) Update(c *gin.Context) {
 
 	// Update record exist in DB
 	// Using album repository interface
-	err = al.albumRepo.Update(updateRequest.Title, updateRequest.Artist, updateRequest.Price, ID)
+	err = al.albumRepo.Update(updateRequest.Title, updateRequest.Artist, updateRequest.Price, id)
 
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, "Server error")
@@ -128,21 +127,25 @@ func (al AlbumHandler) Update(c *gin.Context) {
 
 // Delete a record of albums in DB.
 func (al AlbumHandler) Delete(c *gin.Context) {
-	ID, _ := c.Params.Get("id")
+	id, err1 := c.Params.Get("id")
+
+	if err1 == false {
+		c.IndentedJSON(http.StatusBadRequest, "ID require")
+		return
+	}
 
 	// Using album repository interface
-	err := al.albumRepo.Delete(ID)
+	err := al.albumRepo.Delete(id)
 
 	if err != nil {
 		// No record in database
 		if err == sql.ErrNoRows {
 			c.IndentedJSON(http.StatusNotFound, "Not found")
 			return
-		} else {
-			// check server err
-			c.IndentedJSON(http.StatusBadGateway, "Server Error")
-			return
 		}
+		// check server err
+		c.IndentedJSON(http.StatusBadGateway, "Server Error")
+		return
 	}
 
 	c.IndentedJSON(http.StatusOK, "OK")
