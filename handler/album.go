@@ -2,7 +2,6 @@ package handler
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 
 	"github.com/alochym01/gin-website/models"
@@ -36,7 +35,6 @@ func (al AlbumHandler) Index(c *gin.Context) {
 // Show a record of albums as JSON in DB.
 func (al AlbumHandler) Show(c *gin.Context) {
 	id := c.Param("id")
-	fmt.Println("alochym", c.Request.URL)
 
 	// Single-Row Queries
 	// Using album repository interface
